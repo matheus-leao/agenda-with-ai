@@ -17,13 +17,11 @@ describe('Contact Tests', ()=>{
     describe('POST /notes', ()=>{
         it('Try to create a empty contact', async ()=>{
             const response = await request(app).post('/contacts').send({});
-            console.log(JSON.stringify(response))
             expect(response.statusCode).to.equal(400)
             expect(response.body).to.have.property('error', 'Nome e telefone são obrigatórios.')
         })
         it('Try to create a contact without phone', async ()=>{
             const response = await request(app).post('/contacts').send({name: fakeContact.name});
-            console.log(JSON.stringify(response))
             expect(response.statusCode).to.equal(400)
             expect(response.body).to.have.property('error', 'Nome e telefone são obrigatórios.')
         })
