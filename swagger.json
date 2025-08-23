@@ -1,0 +1,95 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Agenda de Contatos API",
+    "version": "1.0.0",
+    "description": "API para cadastro de contatos (nome e telefone)"
+  },
+  "paths": {
+    "/contacts": {
+      "post": {
+        "summary": "Adiciona um novo contato",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "phone": { "type": "string" }
+                },
+                "required": ["name", "phone"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contato criado com sucesso"
+          },
+          "409": {
+            "description": "Contato já cadastrado"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          }
+        }
+      },
+      "get": {
+        "summary": "Lista todos os contatos",
+        "responses": {
+          "200": {
+            "description": "Lista de contatos"
+          }
+        }
+      }
+      ,
+      "put": {
+        "summary": "Edita o telefone de um contato existente",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "phone": { "type": "string" }
+                },
+                "required": ["name", "phone"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Contato atualizado com sucesso" },
+          "404": { "description": "Contato não encontrado" },
+          "400": { "description": "Dados inválidos" }
+        }
+      },
+      "delete": {
+        "summary": "Remove um contato pelo nome",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": { "description": "Contato removido com sucesso" },
+          "404": { "description": "Contato não encontrado" },
+          "400": { "description": "Dados inválidos" }
+        }
+      }
+    }
+  }
+}
