@@ -14,7 +14,7 @@ const fakeContact = {
             }
 
 describe('Contact Tests', ()=>{
-    describe('POST /notes', ()=>{
+    describe('POST /contact', ()=>{
         it('Try to create a empty contact', async ()=>{
             const response = await request(app).post('/contacts').send({});
             expect(response.statusCode).to.equal(400)
@@ -41,7 +41,6 @@ describe('Contact Tests', ()=>{
     describe('DELETE /contacts', ()=>{
         it('Delete an contact', async ()=>{
             const response = await request(app).delete('/contacts').send({"name":fakeContact.name});
-            console.log(JSON.stringify(response))
             expect(response.statusCode).to.equal(204)
         })
     })
