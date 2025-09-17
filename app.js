@@ -1,7 +1,7 @@
 const express = require('express');
 const contactController = require('./controller/contactController');
 const authController = require('./controller/authController');
-const authenticate = require('./authMiddleware');
+const authenticate = require('./middleware/authMiddleware');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
