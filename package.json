@@ -16,5 +16,8 @@
     "sinon": "^21.0.0",
     "supertest": "^7.1.4",
     "swagger-ui-express": "^4.6.3"
+  },
+  "devDependencies": {
+    "prettier": "3.6.2"
   }
 }
