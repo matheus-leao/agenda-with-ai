@@ -5,9 +5,71 @@
     "version": "1.0.0",
     "description": "API para cadastro de contatos (nome e telefone)"
   },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
   "paths": {
+    "/register": {
+      "post": {
+        "summary": "Registra um novo usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["name", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Usuário registrado com sucesso" },
+          "409": { "description": "Usuário já cadastrado" },
+          "400": { "description": "Dados inválidos" }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Autentica usuário e retorna JWT",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["name", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Token JWT gerado com sucesso" },
+          "401": { "description": "Credenciais inválidas" },
+          "400": { "description": "Dados inválidos" }
+        }
+      }
+    },
     "/contacts": {
       "post": {
+        "summary": "Adiciona um novo contato",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
         "summary": "Adiciona um novo contato",
         "requestBody": {
           "required": true,
@@ -25,28 +87,24 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Contato criado com sucesso"
-          },
-          "409": {
-            "description": "Contato já cadastrado"
-          },
-          "400": {
-            "description": "Dados inválidos"
-          }
+          "201": { "description": "Contato criado com sucesso" },
+          "409": { "description": "Contato já cadastrado" },
+          "400": { "description": "Dados inválidos" },
+          "401": { "description": "Token ausente ou inválido" }
         }
       },
       "get": {
         "summary": "Lista todos os contatos",
+        "security": [{ "bearerAuth": [] }],
         "responses": {
-          "200": {
-            "description": "Lista de contatos"
-          }
+          "200": { "description": "Lista de contatos" },
+          "401": { "description": "Token ausente ou inválido" }
         }
       }
       ,
       "put": {
         "summary": "Edita o telefone de um contato existente",
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -65,11 +123,13 @@
         "responses": {
           "200": { "description": "Contato atualizado com sucesso" },
           "404": { "description": "Contato não encontrado" },
-          "400": { "description": "Dados inválidos" }
+          "400": { "description": "Dados inválidos" },
+          "401": { "description": "Token ausente ou inválido" }
         }
       },
       "delete": {
         "summary": "Remove um contato pelo nome",
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -87,8 +147,18 @@
         "responses": {
           "204": { "description": "Contato removido com sucesso" },
           "404": { "description": "Contato não encontrado" },
-          "400": { "description": "Dados inválidos" }
+          "400": { "description": "Dados inválidos" },
+          "401": { "description": "Token ausente ou inválido" }
         }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
