@@ -70,97 +70,96 @@
         "summary": "Adiciona um novo contato",
         "security": [{ "bearerAuth": [] }],
         "requestBody": {
-        "summary": "Adiciona um novo contato",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": { "type": "string" },
-                  "phone": { "type": "string" }
-                },
-                "required": ["name", "phone"]
+          "summary": "Adiciona um novo contato",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "phone": { "type": "string" }
+                  },
+                  "required": ["name", "phone"]
+                }
               }
             }
+          },
+          "responses": {
+            "201": { "description": "Contato criado com sucesso" },
+            "409": { "description": "Contato já cadastrado" },
+            "400": { "description": "Dados inválidos" },
+            "401": { "description": "Token ausente ou inválido" }
           }
         },
-        "responses": {
-          "201": { "description": "Contato criado com sucesso" },
-          "409": { "description": "Contato já cadastrado" },
-          "400": { "description": "Dados inválidos" },
-          "401": { "description": "Token ausente ou inválido" }
-        }
-      },
-      "get": {
-        "summary": "Lista todos os contatos",
-        "security": [{ "bearerAuth": [] }],
-        "responses": {
-          "200": { "description": "Lista de contatos" },
-          "401": { "description": "Token ausente ou inválido" }
+        "get": {
+          "summary": "Lista todos os contatos",
+          "security": [{ "bearerAuth": [] }],
+          "responses": {
+            "200": { "description": "Lista de contatos" },
+            "401": { "description": "Token ausente ou inválido" }
+          }
+        },
+        "put": {
+          "summary": "Edita o telefone de um contato existente",
+          "security": [{ "bearerAuth": [] }],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "phone": { "type": "string" }
+                  },
+                  "required": ["name", "phone"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Contato atualizado com sucesso" },
+            "404": { "description": "Contato não encontrado" },
+            "400": { "description": "Dados inválidos" },
+            "401": { "description": "Token ausente ou inválido" }
+          }
+        },
+        "delete": {
+          "summary": "Remove um contato pelo nome",
+          "security": [{ "bearerAuth": [] }],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" }
+                  },
+                  "required": ["name"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": { "description": "Contato removido com sucesso" },
+            "404": { "description": "Contato não encontrado" },
+            "400": { "description": "Dados inválidos" },
+            "401": { "description": "Token ausente ou inválido" }
+          }
         }
       }
-      ,
-      "put": {
-        "summary": "Edita o telefone de um contato existente",
-        "security": [{ "bearerAuth": [] }],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": { "type": "string" },
-                  "phone": { "type": "string" }
-                },
-                "required": ["name", "phone"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": { "description": "Contato atualizado com sucesso" },
-          "404": { "description": "Contato não encontrado" },
-          "400": { "description": "Dados inválidos" },
-          "401": { "description": "Token ausente ou inválido" }
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
         }
-      },
-      "delete": {
-        "summary": "Remove um contato pelo nome",
-        "security": [{ "bearerAuth": [] }],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": { "type": "string" }
-                },
-                "required": ["name"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": { "description": "Contato removido com sucesso" },
-          "404": { "description": "Contato não encontrado" },
-          "400": { "description": "Dados inválidos" },
-          "401": { "description": "Token ausente ou inválido" }
-        }
-      }
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
       }
     }
   }
-}
 }

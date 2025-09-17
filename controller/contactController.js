@@ -1,9 +1,9 @@
-const contactService = require('../service/contactService');
+const contactService = require("../service/contactService");
 
 function createContact(req, res) {
   const { name, phone } = req.body;
   if (!name || !phone) {
-    return res.status(400).json({ error: 'Nome e telefone são obrigatórios.' });
+    return res.status(400).json({ error: "Nome e telefone são obrigatórios." });
   }
   try {
     const contact = contactService.addContact(name, phone);
@@ -21,7 +21,7 @@ function listContacts(req, res) {
 function updateContact(req, res) {
   const { name, phone } = req.body;
   if (!name || !phone) {
-    return res.status(400).json({ error: 'Nome e telefone são obrigatórios.' });
+    return res.status(400).json({ error: "Nome e telefone são obrigatórios." });
   }
   try {
     const contact = contactService.updateContact(name, phone);
@@ -34,7 +34,7 @@ function updateContact(req, res) {
 function deleteContact(req, res) {
   const { name } = req.body;
   if (!name) {
-    return res.status(400).json({ error: 'Nome é obrigatório.' });
+    return res.status(400).json({ error: "Nome é obrigatório." });
   }
   try {
     contactService.deleteContact(name);
@@ -48,5 +48,5 @@ module.exports = {
   createContact,
   listContacts,
   updateContact,
-  deleteContact
+  deleteContact,
 };

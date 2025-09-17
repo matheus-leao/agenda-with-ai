@@ -1,9 +1,9 @@
-const { users } = require('../model/userModel');
-const bcrypt = require('bcryptjs');
+const { users } = require("../model/userModel");
+const bcrypt = require("bcryptjs");
 
 function createUser(name, password) {
-  if (users.some(u => u.name === name)) {
-    throw new Error('Usuário já cadastrado.');
+  if (users.some((u) => u.name === name)) {
+    throw new Error("Usuário já cadastrado.");
   }
   const hashed = bcrypt.hashSync(password, 8);
   const user = { name, password: hashed };
@@ -12,7 +12,7 @@ function createUser(name, password) {
 }
 
 function findUserByName(name) {
-  return users.find(u => u.name === name);
+  return users.find((u) => u.name === name);
 }
 
 function validateUser(name, password) {
@@ -24,5 +24,5 @@ function validateUser(name, password) {
 module.exports = {
   createUser,
   findUserByName,
-  validateUser
+  validateUser,
 };

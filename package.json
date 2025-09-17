@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "mocha test/**/*.test.js --timeout 10000"
+    "test": "mocha test/**/*.test.js --timeout 10000",
+    "prettier": "prettier --write \"**/*.{js,json}\" --ignore-path .gitignore"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
