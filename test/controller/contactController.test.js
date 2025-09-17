@@ -16,13 +16,16 @@ const fakeContact = {
 // Test user credentials
 const testUser = { name: 'tester', password: 'pass123' };
 let authToken;
-const getToken = require('../helpers/getToken');
 
 describe('Contact Tests', ()=>{
     // Register and login once to obtain token
     before(async ()=>{
-        authToken = await getToken(app, testUser);
+        //create user and get token
+        await request(app).post('/register').send(testUser);
+        const loginRes = await request(app).post('/login').send(testUser);
+        authToken = loginRes.body.token;
     })
+
     describe('POST /contact', ()=>{
         it('Try to create a empty contact', async ()=>{
             const response = await request(app).post('/contacts').set('Authorization', `Bearer ${authToken}`).send({});
