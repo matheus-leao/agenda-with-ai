@@ -44,4 +44,4 @@ jobs:
           artifact: mochawesome          
           name: Mocha Tests                 
           path: 'mochawesome-report\mochawesome.json'    
-          reporter: mochawesome     
+          reporter: mocha-json
