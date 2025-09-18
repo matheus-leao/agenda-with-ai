@@ -55,7 +55,19 @@ describe("Contact Tests", () => {
         "Nome e telefone são obrigatórios.",
       );
     });
-    it("Create a new note", async () => {
+    it("Try to create a contact and check size of phone", async () => {
+      const response = await request(app)
+        .post("/contacts")
+        .auth(authToken, { type: "bearer" })
+        .send({ name: "John", phone: "12345678" });
+      expect(response.statusCode).to.equal(400);
+      expect(response.body).to.have.property(
+        "error",
+        "Telefone deve ter ao menos 9 dígitos.",
+      );
+    });
+
+    it("Create a new contact", async () => {
       const response = await request(app)
         .post("/contacts")
         .auth(authToken, { type: "bearer" })

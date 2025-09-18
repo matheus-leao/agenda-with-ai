@@ -26,4 +26,3 @@ describe("Auth Tests", () => {
     expect(response.body).to.have.property("error");
   });
 });
-
