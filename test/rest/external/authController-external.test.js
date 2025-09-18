@@ -1,9 +1,8 @@
 const request = require("supertest");
 const { expect } = require("chai");
-const { faker } = require('@faker-js/faker');
+const { faker } = require("@faker-js/faker");
 
 const baseUrl = "http://localhost:3000";
-
 
 describe("External - Auth Tests", () => {
   const user = { name: faker.person.firstName(), password: "1234" };
