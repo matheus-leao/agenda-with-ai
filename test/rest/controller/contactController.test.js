@@ -2,26 +2,32 @@
 const request = require("supertest");
 const sinon = require("sinon");
 const { expect } = require("chai");
+const { faker } = require("@faker-js/faker");
 
 // App
-const app = require("../../app");
+const app = require("../../../app");
 
 // Mock
-const contactService = require("../../service/contactService");
+const contactService = require("../../../service/contactService");
 const fakeContact = {
   name: "matheus",
   phone: "3200000000",
 };
 
 // Test user credentials
-const testUser = { name: "tester", password: "pass123" };
+const testUser = { name: faker.person.firstName(), password: "pass123" };
 let authToken;
 
 describe("Contact Tests", () => {
   // Register and login once to obtain token
   before(async () => {
-    //create user and get token
-    await request(app).post("/register").send(testUser);
+    //create user
+    const createUserResponse = await request(app)
+      .post("/register")
+      .send(testUser);
+    expect(createUserResponse.statusCode).to.equal(201);
+
+    //Login with user and store token
     const loginRes = await request(app).post("/login").send(testUser);
     authToken = loginRes.body.token;
   });
@@ -30,7 +36,7 @@ describe("Contact Tests", () => {
     it("Try to create a empty contact", async () => {
       const response = await request(app)
         .post("/contacts")
-        .set("Authorization", `Bearer ${authToken}`)
+        .auth(authToken, { type: "bearer" })
         .send({});
       expect(response.statusCode).to.equal(400);
       expect(response.body).to.have.property(
@@ -41,7 +47,7 @@ describe("Contact Tests", () => {
     it("Try to create a contact without phone", async () => {
       const response = await request(app)
         .post("/contacts")
-        .set("Authorization", `Bearer ${authToken}`)
+        .auth(authToken, { type: "bearer" })
         .send({ name: fakeContact.name });
       expect(response.statusCode).to.equal(400);
       expect(response.body).to.have.property(
@@ -49,16 +55,29 @@ describe("Contact Tests", () => {
         "Nome e telefone são obrigatórios.",
       );
     });
-    it("Create a new note", async () => {
+    it("Try to create a contact and check size of phone", async () => {
       const response = await request(app)
         .post("/contacts")
-        .set("Authorization", `Bearer ${authToken}`)
+        .auth(authToken, { type: "bearer" })
+        .send({ name: "John", phone: "12345678" });
+      expect(response.statusCode).to.equal(400);
+      expect(response.body).to.have.property(
+        "error",
+        "Telefone deve ter ao menos 9 dígitos.",
+      );
+    });
+
+    it("Create a new contact", async () => {
+      const response = await request(app)
+        .post("/contacts")
+        .auth(authToken, { type: "bearer" })
         .send(fakeContact);
       expect(response.statusCode).to.equal(201);
       expect(response.body).to.have.property("name", fakeContact.name);
       expect(response.body).to.have.property("phone", fakeContact.phone);
     });
   });
+
   describe("Auth negative tests", () => {
     it("Rejects request without token", async () => {
       const res = await request(app).get("/contacts");
@@ -67,23 +86,25 @@ describe("Contact Tests", () => {
     it("Rejects request with invalid token", async () => {
       const res = await request(app)
         .get("/contacts")
-        .set("Authorization", "Bearer invalid.token.here");
+        .auth("invalid.token", { type: "bearer" });
       expect(res.statusCode).to.equal(401);
     });
   });
+
   describe("GET /contacts", () => {
     it("List for all contacts", async () => {
       const response = await request(app)
         .get("/contacts")
-        .set("Authorization", `Bearer ${authToken}`);
+        .auth(authToken, { type: "bearer" });
       expect(response.statusCode).to.equal(200);
     });
   });
+
   describe("DELETE /contacts", () => {
     it("Delete an contact", async () => {
       const response = await request(app)
         .delete("/contacts")
-        .set("Authorization", `Bearer ${authToken}`)
+        .auth(authToken, { type: "bearer" })
         .send({ name: fakeContact.name });
       expect(response.statusCode).to.equal(204);
     });

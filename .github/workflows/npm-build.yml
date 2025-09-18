@@ -27,4 +27,36 @@ jobs:
           cache: "npm"
       - run: npm ci
       - run: npm run build --if-present
-      - run: npm run test
+      - run: npm run test-controller
+      - uses: actions/upload-artifact@v4  # upload test results
+        name: Upload artifacts
+        if: ${{ !cancelled() }} 
+        with:
+          name: test-controller-results
+          path: report/test-results.json
+
+      - uses: dorny/test-reporter@v2
+        name: Publish test results
+        with:
+          artifact: test-controller-results           
+          name: Mocha Tests                 
+          path: 'test-results.json'    
+          reporter: mocha-json      
+
+      - run: npm start &
+      - run: sleep 5
+      - run: npm run test-external
+      - uses: actions/upload-artifact@v4  # upload test results
+        name: Upload artifacts
+        if: ${{ !cancelled() }} 
+        with:
+          name: test-external-results
+          path: report/test-results.json
+
+      - uses: dorny/test-reporter@v2
+        name: Publish test results
+        with:
+          artifact: test-external-results            
+          name: Mocha Tests                 
+          path: 'test-results.json'    
+          reporter: mocha-json      

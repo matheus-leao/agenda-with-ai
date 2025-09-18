@@ -5,6 +5,11 @@ function createContact(req, res) {
   if (!name || !phone) {
     return res.status(400).json({ error: "Nome e telefone são obrigatórios." });
   }
+  if (phone.length < 9) {
+    return res
+      .status(400)
+      .json({ error: "Telefone deve ter ao menos 9 dígitos." });
+  }
   try {
     const contact = contactService.addContact(name, phone);
     res.status(201).json(contact);
