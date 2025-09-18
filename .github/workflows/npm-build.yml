@@ -33,14 +33,14 @@ jobs:
         if: ${{ !cancelled() }} 
         with:
           name: test-controller-results
-          path: report/test-controller-results.json
+          path: report/test-results.json
 
       - uses: dorny/test-reporter@v2
         name: Publish test results
         with:
           artifact: test-controller-results           
           name: Mocha Tests                 
-          path: 'test-controller-results.json'    
+          path: 'test-results.json'    
           reporter: mocha-json      
 
       - run: npm start &
@@ -51,12 +51,12 @@ jobs:
         if: ${{ !cancelled() }} 
         with:
           name: test-external-results
-          path: report/test-external-results.json
+          path: report/test-results.json
 
       - uses: dorny/test-reporter@v2
         name: Publish test results
         with:
           artifact: test-external-results            
           name: Mocha Tests                 
-          path: 'test-external-results.json'    
+          path: 'test-results.json'    
           reporter: mocha-json      
