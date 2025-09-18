@@ -31,3 +31,17 @@ jobs:
       - run: npm start &
       - run: sleep 5
       - run: npm run test-external
+      - uses: actions/upload-artifact@v4  # upload test results
+        name: Upload artifacts
+        if: ${{ !cancelled() }} 
+        with:
+          name: test-results
+          path: test-results.json
+
+      - uses: dorny/test-reporter@v2
+        name: Publish test results
+        with:
+          artifact: test-results            
+          name: Mocha Tests                 
+          path: 'test-results.json'    
+          reporter: mocha-json      
