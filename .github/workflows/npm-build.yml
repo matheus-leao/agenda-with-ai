@@ -28,6 +28,12 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run test-controller
+      - uses: actions/upload-artifact@v4  # upload test results
+        name: Upload artifacts
+        if: ${{ !cancelled() }} 
+        with:
+          name: test-results
+          path: report/test-results.json
       - run: npm start &
       - run: sleep 5
       - run: npm run test-external
