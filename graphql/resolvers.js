@@ -1,13 +1,13 @@
-const contactService = require('../service/contactService');
-const userService = require('../service/userService');
-const jwt = require('jsonwebtoken');
+const contactService = require("../service/contactService");
+const userService = require("../service/userService");
+const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = process.env.JWT_SECRET || 'segredo';
+const JWT_SECRET = process.env.JWT_SECRET || "segredo";
 
 module.exports = {
   Query: {
     contacts: (parent, args, context) => {
-      if (!context.user) throw new Error('Não autenticado');
+      if (!context.user) throw new Error("Não autenticado");
       return contactService.getContacts();
     },
     me: (parent, args, context) => {
@@ -23,17 +23,17 @@ module.exports = {
     },
     login: (parent, { name, password }) => {
       if (!userService.validateUser(name, password)) {
-        throw new Error('Credenciais inválidas');
+        throw new Error("Credenciais inválidas");
       }
       const token = jwt.sign({ name }, JWT_SECRET);
       return { name, token };
     },
     addContact: (parent, { name, phone }, context) => {
-      if (!context.user) throw new Error('Não autenticado');
+      if (!context.user) throw new Error("Não autenticado");
       return contactService.addContact(name, phone);
     },
     deleteContact: (parent, { name }, context) => {
-      if (!context.user) throw new Error('Não autenticado');
+      if (!context.user) throw new Error("Não autenticado");
       contactService.deleteContact(name);
       return true;
     },
