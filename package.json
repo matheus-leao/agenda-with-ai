@@ -5,9 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "mocha test/**/*.test.js --timeout 10000 --reporter mochawesome",
-    "test-controller": "mocha test/rest/controller/**/*.test.js --timeout 10000 --reporter mochawesome",
-    "test-external": "mocha test/rest/external/**/*.test.js --timeout 10000 --reporter mochawesome",
+    "test": "mocha test/**/*.test.js --timeout 10000 --reporter json > report/test-results.json",
+    "test-controller": "mocha test/rest/controller/**/*.test.js --timeout 10000 --reporter json > report/test-results.json",
+    "test-external": "mocha test/rest/external/**/*.test.js --timeout 10000 --reporter json > report/test-results.json",
     "prettier": "prettier --write \"**/*.{js,json}\" --ignore-path .gitignore"
   },
   "dependencies": {

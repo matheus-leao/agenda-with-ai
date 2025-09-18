@@ -35,13 +35,13 @@ jobs:
         name: Upload artifacts
         if: ${{ !cancelled() }} 
         with:
-          name: mochawesome
-          path: mochawesome-report\mochawesome.json
+          name: test-results
+          path: report/test-results.json
 
       - uses: dorny/test-reporter@v2
         name: Publish test results
         with:
-          artifact: mochawesome          
+          artifact: test-results            
           name: Mocha Tests                 
-          path: 'mochawesome-report\mochawesome.json'    
-          reporter: mocha-json
+          path: 'test-results.json'    
+          reporter: mocha-json      
