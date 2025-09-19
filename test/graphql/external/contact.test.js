@@ -16,8 +16,6 @@ describe("External - Contact Tests", () => {
     const loginUser = require("../../fixture/requests/graphql/external/user/loginUser.json");
     const loginUserResponse = await request(baseUrl).post("").send(loginUser);
     expect(loginUserResponse.statusCode).to.equal(200);
-    console.log("User Response body");
-    console.log(JSON.stringify(loginUserResponse.body));
 
     authToken = loginUserResponse.body.data.login.token;
   });
