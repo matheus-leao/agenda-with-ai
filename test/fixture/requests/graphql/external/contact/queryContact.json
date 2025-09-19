@@ -1,0 +1,3 @@
+{
+  "query": "query Query { contacts { name phone }}"
+}

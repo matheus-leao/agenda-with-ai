@@ -34,4 +34,15 @@ describe("External - Contact Tests", () => {
       addContact.variables.phone,
     );
   });
+
+  it("Try add a new contact graphql without phone", async () => {
+    const addContact = require("../../fixture/requests/graphql/external/contact/addContactWithoutPhone.json");
+    const addContactResponse = await request(baseUrl)
+      .post("")
+      .auth(authToken, { type: "bearer" })
+      .send(addContact);
+    expect(addContactResponse.statusCode).to.equal(400);
+    expect(addContactResponse.body.errors[0]).to.have.property("message", 'Variable "$phone" of required type "String!" was not provided.');
+  });
+
 });
