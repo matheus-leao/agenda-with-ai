@@ -1,0 +1,7 @@
+{
+  "query": "mutation AddContact($name: String!, $phone: String!) { addContact(name: $name, phone: $phone) { name phone }}",
+  "variables": {
+    "name": "lion",
+    "phone": "999999999"
+  }
+}

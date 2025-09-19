@@ -43,7 +43,7 @@ jobs:
           path: 'test-results.json'    
           reporter: mocha-json      
 
-      - run: npm start &
+      - run: npm run start:rest &
       - run: sleep 5
       - run: npm run test-external
       - uses: actions/upload-artifact@v4  # upload test results
@@ -60,3 +60,21 @@ jobs:
           name: Mocha Tests                 
           path: 'test-results.json'    
           reporter: mocha-json      
+
+      - run: npm run start:graphql &
+      - run: sleep 5
+      - run: npm run test-external-graphql
+      - uses: actions/upload-artifact@v4  # upload test results
+        name: Upload artifacts
+        if: ${{ !cancelled() }} 
+        with:
+          name: test-graphql-external-results
+          path: report/test-results.json
+
+      - uses: dorny/test-reporter@v2
+        name: Publish test results
+        with:
+          artifact: test-graphql-external-results          
+          name: Mocha Tests                 
+          path: 'test-results.json'    
+          reporter: mocha-json
