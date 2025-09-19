@@ -43,7 +43,7 @@ jobs:
           path: 'test-results.json'    
           reporter: mocha-json      
 
-      - run: npm start:rest &
+      - run: npm run start:rest &
       - run: sleep 5
       - run: npm run test-external
       - uses: actions/upload-artifact@v4  # upload test results
@@ -61,7 +61,7 @@ jobs:
           path: 'test-results.json'    
           reporter: mocha-json      
 
-      - run: npm start:graphql &
+      - run: npm run start:graphql &
       - run: sleep 5
       - run: npm run test-external-graphql
       - uses: actions/upload-artifact@v4  # upload test results
