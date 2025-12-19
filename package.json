@@ -6,10 +6,10 @@
   "scripts": {
     "start:rest": "node server.js",
     "start:graphql": "node graphql/server.js",
-    "test": "mocha test/**/*.test.js --timeout 10000",
-    "test-controller": "mocha test/rest/controller/**/*.test.js --timeout 10000 --reporter json > report/test-results.json",
-    "test-external": "mocha test/rest/external/**/*.test.js --timeout 10000 --reporter json > report/test-results.json",
-    "test-external-graphql": "mocha test/graphql/external/**/*.test.js --timeout 10000 --reporter json > report/test-results.json",
+    "test": "mocha tests/api/**/*.test.js --timeout 10000",
+    "test-controller": "mocha tests/api/controller/**/*.test.js --timeout 10000 --reporter json > report/test-results.json",
+    "test-external": "mocha tests/api/external/**/*.test.js --timeout 10000 --reporter json > report/test-results.json",
+    "test-external-graphql": "mocha tests/api/graphql/external/**/*.test.js --timeout 10000 --reporter json > report/test-results.json",
     "prettier": "prettier --write \"**/*.{js,json}\" --ignore-path .gitignore"
   },
   "dependencies": {
