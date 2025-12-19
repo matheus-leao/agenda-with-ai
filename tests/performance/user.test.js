@@ -27,7 +27,7 @@ export const options = {
 };
 
 export default function () {
-    let userBody = JSON.stringify({ name: `lion test ${randomString(8)}`, password: `1234` })
+    let userBody = JSON.stringify({ name: `test ${randomString(8)}`, password: `1234` })
     let url = `${baseUrl}/register`;
 
     // create new user
