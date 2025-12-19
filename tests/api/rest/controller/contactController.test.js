@@ -5,10 +5,10 @@ const { expect } = require("chai");
 const { faker } = require("@faker-js/faker");
 
 // App
-const app = require("../../../app");
+const app = require("../../../../app");
 
 // Mock
-const contactService = require("../../../service/contactService");
+const contactService = require("../../../../service/contactService");
 const fakeContact = {
   name: "matheus",
   phone: "3200000000",

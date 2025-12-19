@@ -5,9 +5,9 @@ const { expect } = require("chai");
 const { faker } = require("@faker-js/faker");
 
 // App
-const app = require("../../../app");
-const contactController = require("../../../controller/contactController");
-const contactService = require("../../../service/contactService");
+const app = require("../../../../app");
+const contactController = require("../../../../controller/contactController");
+const contactService = require("../../../../service/contactService");
 
 const testUser = { name: faker.person.firstName(), password: "pass123" };
 

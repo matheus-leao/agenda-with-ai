@@ -1,6 +1,5 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const { faker } = require("@faker-js/faker");
 
 const baseUrl = "http://localhost:4000/graphql";
 let authToken;

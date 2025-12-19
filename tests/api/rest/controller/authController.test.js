@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { expect } = require("chai");
-const app = require("../../../app");
+const app = require("../../../../app");
 
 describe("Auth Tests", () => {
   const user = { name: "authuser", password: "mypassword" };
