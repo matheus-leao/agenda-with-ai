@@ -1,9 +1,9 @@
 const request = require("supertest");
 const { expect } = require("chai");
-const app = require("../../../app");
+const app = require("../../../../app");
 
 const sinon = require("sinon");
-const authController = require("../../../controller/authController");
+const authController = require("../../../../controller/authController");
 
 const user = { name: "authuser", password: "mypassword" };
 
