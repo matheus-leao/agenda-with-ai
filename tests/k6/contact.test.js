@@ -2,8 +2,7 @@
 import { check, group, sleep } from "k6";
 import http from "k6/http";
 import { randomString } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
-
-const baseUrl = "http://localhost:3000";
+import getBaseUrl from "./helpers/getBaseUrl.js"
 
 // define configuration
 export const options = {
@@ -24,11 +23,11 @@ export default function () {
       password: `1234`,
     });
     // create new user
-    const createUserResponse = http.post(`${baseUrl}/register`, userBody, {
+    const createUserResponse = http.post(`${getBaseUrl()}/register`, userBody, {
       headers: { "Content-Type": "application/json" },
     });
 
-    const loginUserResponse = http.post(`${baseUrl}/login`, userBody, {
+    const loginUserResponse = http.post(`${getBaseUrl()}/login`, userBody, {
       headers: { "Content-Type": "application/json" },
     });
 
@@ -39,7 +38,7 @@ export default function () {
         phone: "000000000"
     })
 
-    const createContactResponse = http.post(`${baseUrl}/contacts`, contactBody, {
+    const createContactResponse = http.post(`${getBaseUrl()}/contacts`, contactBody, {
       headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${userToken}` },
     });
 
