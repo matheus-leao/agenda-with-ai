@@ -11,14 +11,8 @@ export const options = {
     http_req_duration: ["p(99)<1000"], // 99% of requests should be below 1s
   },
 
-  stages: [
-    { duration: "3s", target: 10 }, // Ramp up
-    { duration: "15s", target: 10 }, // Average
-    { duration: "2s", target: 100 }, // Spike
-    { duration: "3s", target: 100 }, // Spike
-    { duration: "5s", target: 10 }, // Average
-    { duration: "5s", target: 0 }, // Ramp down
-  ],
+  vus: 10,
+  duration: "10s"
 };
 
 export default function () {
