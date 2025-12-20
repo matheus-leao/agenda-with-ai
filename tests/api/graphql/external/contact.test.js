@@ -41,7 +41,9 @@ describe("External - Contact Tests", () => {
       .auth(authToken, { type: "bearer" })
       .send(addContact);
     expect(addContactResponse.statusCode).to.equal(400);
-    expect(addContactResponse.body.errors[0]).to.have.property("message", 'Variable "$phone" of required type "String!" was not provided.');
+    expect(addContactResponse.body.errors[0]).to.have.property(
+      "message",
+      'Variable "$phone" of required type "String!" was not provided.',
+    );
   });
-
 });
