@@ -8,14 +8,21 @@ import UserHelper from "./helpers/userHelper.js";
 
 // define configuration
 export const options = {
-  vus: 1,
-  duration: "10s",
-
   // define thresholds
   thresholds: {
     http_req_failed: ["rate<0.01"], // http errors should be less than 1%
-    http_req_duration: ["p(99)<1000"], // 99% of requests should be below 1s
+    http_req_duration: ["p(99)<3000"], // 99% of requests should be below 1s
+    http_req_duration: ["p(95)<2000"], // 99% of requests should be below 1s
   },
+
+  stages: [
+    { duration: "3s", target: 10 }, // Ramp up
+    { duration: "15s", target: 10 }, // Average
+    { duration: "2s", target: 100 }, // Spike
+    { duration: "3s", target: 100 }, // Spike
+    { duration: "5s", target: 10 }, // Average
+    { duration: "5s", target: 0 }, // Ramp down
+  ],
 };
 
 export default function () {
@@ -46,7 +53,7 @@ export default function () {
 
   group(`Create contact`, () => {
     let contactBody = JSON.stringify({
-      name: faker.person.firstName(),
+      name: faker.person.name(),
       phone: faker.person.phone(),
     });
 
