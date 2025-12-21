@@ -98,6 +98,7 @@ jobs:
           cloud-comment-on-pr: true
 
       - name: Upload artifact
+        id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
           # Directory containing the static site files
