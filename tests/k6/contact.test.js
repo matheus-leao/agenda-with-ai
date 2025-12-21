@@ -6,6 +6,8 @@ import { randomString } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
 import getBaseUrl from "./helpers/urlHelper.js";
 import UserHelper from "./helpers/userHelper.js";
 import { Trend } from "k6/metrics";
+import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js'
+import { textSummary } from 'https://jslib.k6.io/k6-summary/0.1.0/index.js'
 
 // define configuration
 export const options = {
@@ -83,5 +85,14 @@ export default function () {
     });
 
     sleep(1);
+    handleSummary();
   });
+
+}
+
+export function handleSummary(data) {
+  return {
+    './report/k6-result.html': htmlReport(data),
+    stdout: textSummary(data, { indent: ' ', enableColors: true }),
+  }
 }
