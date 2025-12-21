@@ -154,4 +154,4 @@ Após rodar `node graphql/server.js`, acesse [http://localhost:4000/graphql](htt
 
 ## Performance Tests
 
-Para a explicação detalhada sobre os testes de performance por favor navegue para [PERFORMANCE](PERFORMANCE.MD)
+Para a explicação detalhada sobre os testes de performance por favor navegue para [Performance Tests](PERFORMANCE.md)
