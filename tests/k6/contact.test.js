@@ -85,7 +85,6 @@ export default function () {
     });
 
     sleep(1);
-    handleSummary();
   });
 
 }
