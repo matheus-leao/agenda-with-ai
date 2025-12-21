@@ -9,7 +9,7 @@ import { Trend } from "k6/metrics";
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 import { textSummary } from "https://jslib.k6.io/k6-summary/0.1.0/index.js";
 
-const baseFile = JSON.parse(open("./fixture/emergenciaPolicial.json"))
+const defaultContact = JSON.parse(open("./fixture/emergenciaPolicial.json"));
 
 // define configuration
 export const options = {
@@ -68,24 +68,25 @@ export default function () {
   });
 
   group(`Create default contact`, () => {
-
-    const createDefaultContactResponse = createContact(userToken, baseFile)
+    const createDefaultContactResponse = createContact(
+      userToken,
+      defaultContact,
+    );
 
     check(createDefaultContactResponse, {
-      "Verify contact created with status 201": (createDefaultContactResponse) =>
-        createDefaultContactResponse.status === 201,
+      "Verify contact created with status 201": (
+        createDefaultContactResponse,
+      ) => createDefaultContactResponse.status === 201,
     });
   });
 
   group(`Create contact`, () => {
-    let contactBody = JSON.stringify(
-      {
-        name: faker.person.name(),
-        phone: faker.person.phone(),
-      }
-    );
+    let contactBody = JSON.stringify({
+      name: faker.person.name(),
+      phone: faker.person.phone(),
+    });
 
-    const createContactResponse = createContact(userToken, contactBody)
+    const createContactResponse = createContact(userToken, contactBody);
 
     const flowDuration = Date.now() - start;
     completeFlowDuration.add(flowDuration);
@@ -106,15 +107,11 @@ export function handleSummary(data) {
   };
 }
 
-const createContact = (userToken, contactBody) =>{
-  return http.post(
-      `${getBaseUrl()}/contacts`,
-      contactBody,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userToken}`,
-        },
-      },
-    );
-}
+const createContact = (userToken, contactBody) => {
+  return http.post(`${getBaseUrl()}/contacts`, contactBody, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userToken}`,
+    },
+  });
+};
