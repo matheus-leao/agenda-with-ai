@@ -151,3 +151,7 @@ Acesse [http://localhost:3000/api-docs](http://localhost:3000/api-docs) após in
 ## GraphQL Playground
 
 Após rodar `node graphql/server.js`, acesse [http://localhost:4000/graphql](http://localhost:4000/graphql) para explorar e testar queries/mutations.
+
+## Performance Tests
+
+Para a explicação detalhada sobre os testes de performance por favor navegue para [PERFORMANCE](PERFORMANCE.MD)
