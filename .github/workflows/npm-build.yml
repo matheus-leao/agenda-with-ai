@@ -83,6 +83,7 @@ jobs:
         name: Setup K6
 
       - uses: grafana/run-k6-action@v1
+        id: run_k6
         name: Run k6 test
         env:
           BASE_URL: ${{ secrets.BASE_URL}}
@@ -92,3 +93,8 @@ jobs:
           path: ./tests/k6/*.test.js
           cloud-run-locally: false
           cloud-comment-on-pr: true
+
+      - name: Print test run IDs
+        run: echo "Test run IDs - $TEST_RUN_IDS"
+        env:
+          TEST_RUN_IDS: ${{ steps.run_k6.outputs.testRunIds }}
