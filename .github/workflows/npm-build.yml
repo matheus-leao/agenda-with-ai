@@ -87,14 +87,7 @@ jobs:
         name: Run k6 test
         env:
           BASE_URL: ${{ secrets.BASE_URL}}
-          K6_CLOUD_TOKEN: ${{ secrets.K6_CLOUD_TOKEN }}
-          K6_CLOUD_PROJECT_ID: ${{ secrets.K6_CLOUD_PROJECT_ID }}
         with:
           path: ./tests/k6/*.test.js
           cloud-run-locally: false
           cloud-comment-on-pr: true
-
-      - name: Print test run IDs
-        run: echo "Test run IDs - $TEST_RUN_IDS"
-        env:
-          TEST_RUN_IDS: ${{ steps.run_k6.outputs.testRunIds }}
