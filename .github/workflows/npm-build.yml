@@ -101,7 +101,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Directory containing the static site files
-          path: './report/k6-result.html'
+          path: 'report/k6-result.html'
       
   deploy:
     environment:
