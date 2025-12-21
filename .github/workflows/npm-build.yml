@@ -86,5 +86,7 @@ jobs:
         name: Run k6 test
         env:
           BASE_URL: ${{ secrets.BASE_URL}}
+          K6_CLOUD_TOKEN: ${{ secrets.K6_CLOUD_TOKEN }}
+          K6_CLOUD_PROJECT_ID: ${{ secrets.K6_CLOUD_PROJECT_ID }}
         with:
           path: ./tests/k6/*.test.js
