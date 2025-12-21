@@ -9,13 +9,15 @@ import { Trend } from "k6/metrics";
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 import { textSummary } from "https://jslib.k6.io/k6-summary/0.1.0/index.js";
 
+const baseFile = JSON.parse(open("./fixture/emergenciaPolicial.json"))
+
 // define configuration
 export const options = {
   // define thresholds
   thresholds: {
     http_req_failed: ["rate<0.01"], // http errors should be less than 1%
-    http_req_duration: ["p(99)<3000"], // 99% of requests should be below 1s
-    http_req_duration: ["p(95)<2000"], // 99% of requests should be below 1s
+    http_req_duration: ["p(99)<3000"], // 99% of requests should be below 3s
+    http_req_duration: ["p(95)<2000"], // 95% of requests should be below 2s
   },
 
   stages: [
@@ -58,29 +60,32 @@ export default function () {
     const loginUserResponse = new UserHelper().loginUser(userBody);
     userToken = loginUserResponse.json("token");
     check(loginUserResponse, {
-      "Verify login with status 201": (loginUserResponse) =>
+      "Verify login with status 200": (loginUserResponse) =>
         loginUserResponse.status === 200,
       "Verify token is an string": (loginUserResponse) =>
         typeof loginUserResponse.json().token == "string",
     });
   });
 
-  group(`Create contact`, () => {
-    let contactBody = JSON.stringify({
-      name: faker.person.name(),
-      phone: faker.person.phone(),
-    });
+  group(`Create default contact`, () => {
 
-    const createContactResponse = http.post(
-      `${getBaseUrl()}/contacts`,
-      contactBody,
+    const createDefaultContactResponse = createContact(userToken, baseFile)
+
+    check(createDefaultContactResponse, {
+      "Verify contact created with status 201": (createDefaultContactResponse) =>
+        createDefaultContactResponse.status === 201,
+    });
+  });
+
+  group(`Create contact`, () => {
+    let contactBody = JSON.stringify(
       {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userToken}`,
-        },
-      },
+        name: faker.person.name(),
+        phone: faker.person.phone(),
+      }
     );
+
+    const createContactResponse = createContact(userToken, contactBody)
 
     const flowDuration = Date.now() - start;
     completeFlowDuration.add(flowDuration);
@@ -99,4 +104,17 @@ export function handleSummary(data) {
     "./report/k6-result.html": htmlReport(data),
     stdout: textSummary(data, { indent: " ", enableColors: true }),
   };
+}
+
+const createContact = (userToken, contactBody) =>{
+  return http.post(
+      `${getBaseUrl()}/contacts`,
+      contactBody,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userToken}`,
+        },
+      },
+    );
 }
