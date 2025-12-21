@@ -2,8 +2,8 @@
 import { check, group, sleep } from "k6";
 import { randomString } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
 import UserHelper from "./helpers/userHelper.js";
-import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js'
-import { textSummary } from 'https://jslib.k6.io/k6-summary/0.1.0/index.js'
+import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+import { textSummary } from "https://jslib.k6.io/k6-summary/0.1.0/index.js";
 
 // define configuration
 export const options = {
@@ -15,6 +15,12 @@ export const options = {
 
   vus: 10,
   duration: "10s",
+
+  ext: {
+    loadimpact: {
+      projectID: 6176272,
+    },
+  },
 };
 
 export default function () {
@@ -36,7 +42,7 @@ export default function () {
 
 export function handleSummary(data) {
   return {
-    './report/k6-result.html': htmlReport(data),
-    stdout: textSummary(data, { indent: ' ', enableColors: true }),
-  }
+    "./report/k6-result.html": htmlReport(data),
+    stdout: textSummary(data, { indent: " ", enableColors: true }),
+  };
 }
