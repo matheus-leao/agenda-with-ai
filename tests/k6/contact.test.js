@@ -67,19 +67,6 @@ export default function () {
     });
   });
 
-  group(`Create default contact`, () => {
-    const createDefaultContactResponse = createContact(
-      userToken,
-      defaultContact,
-    );
-
-    check(createDefaultContactResponse, {
-      "Verify contact created with status 201": (
-        createDefaultContactResponse,
-      ) => createDefaultContactResponse.status === 201,
-    });
-  });
-
   group(`Create contact`, () => {
     let contactBody = JSON.stringify({
       name: faker.person.name(),
