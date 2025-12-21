@@ -1,24 +1,44 @@
 # Testes de Performance utilizando o K6
 
-Os testes estão salvos na pasta tests/k6. nela contém os arquivos de teste e os helpers utilizados nos testes. Abaixo detalharei todos os conceitos empregados e seus respectivos trechos de código:
+Os testes estão salvos na pasta `tests/k6`. Nela contêm os arquivos de teste e os helpers utilizados nos testes. Abaixo estão detalhados todos os conceitos empregados e seus respectivos trechos de código.
+
+## Sumário
+
+- [Testes de Performance utilizando o K6](#testes-de-performance-utilizando-o-k6)
+  - [Sumário](#sumário)
+  - [Thresholds](#thresholds)
+    - [user.test.js](#usertestjs)
+    - [contact.test.js](#contacttestjs)
+  - [Checks](#checks)
+    - [contact.test.js](#contacttestjs-1)
+  - [Helpers](#helpers)
+    - [urlHelper.js](#urlhelperjs)
+    - [userHelper.js](#userhelperjs)
+  - [Trends](#trends)
+  - [Faker](#faker)
+  - [Variável de Ambiente](#variável-de-ambiente)
+  - [Stages](#stages)
+  - [Uso de Token de Autenticação e Reaproveitamento de Resposta](#uso-de-token-de-autenticação-e-reaproveitamento-de-resposta)
+    - [contact.test.js](#contacttestjs-2)
+  - [Data-Driven Testing](#data-driven-testing)
+  - [Groups](#groups)
 
 ## Thresholds
-No projeto utilizei alguns thresholds. 
 
+No projeto foram utilizados alguns thresholds:
 
-| Thresholds | Significado|
+| Threshold | Significado |
 | -------- | ------- |
-| http_req_failed: ["rate<0.01"] | Quantidade de erros nos requests http deve ser menor que 1%|
-| http_req_duration: ["p(99)<1000"] | Quantidade de requests que excede o tempo de resposta de 1 segundo deve ser menor que 99%|
-| vus | Quantidade de usuários virtuais|
-| duration | Duração do teste|
+| `http_req_failed: ["rate<0.01"]` | Taxa de erros em requisições HTTP deve ser menor que 1% |
+| `http_req_duration: ["p(99)<1000"]` | 99% das requisições devem ser respondidas em menos de 1 segundo |
+| `vus` | Quantidade de usuários virtuais |
+| `duration` | Duração do teste |
 
-No primeiro teste o objetivo era entender como o sistema se comportaria ao ter um pico de 10 usuários virtuais acessando ao endpoint de criação por um período controlado sem interrupção. 
+No primeiro teste (`user.test.js`), o objetivo era entender como o sistema se comportaria ao ter 10 usuários virtuais simultâneos acessando o endpoint de criação continuamente por 10 segundos. 
 
 ### user.test.js
-```js 
-
-// define configuration
+```js
+// Configuração do teste
 export const options = {
   // define thresholds
   thresholds: {
@@ -28,35 +48,37 @@ export const options = {
   vus: 10,
   duration: "10s",
 };
-
 ```
 
-| Thresholds | Significado|
+| Threshold | Significado |
 | -------- | ------- |
-| http_req_failed: ["rate<0.01"] | Quantidade de erros nos requests http deve ser menor que 1%|
-| http_req_duration: ["p(95)<2000"] | Quantidade de requests que excede o tempo de resposta de 2 segundos deve ser menor que 95%|
-| http_req_duration: ["p(99)<3000"] | Quantidade de requests que excede o tempo de resposta de 3 segundos deve ser menor que 99%|
+| `http_req_failed: ["rate<0.01"]` | Taxa de erros deve ser menor que 1% |
+| `http_req_duration: ["p(95)<2000"]` | 95% das requisições devem ser respondidas em menos de 2 segundos |
+| `http_req_duration: ["p(99)<3000"]` | 99% das requisições devem ser respondidas em menos de 3 segundos |
 
 
-Nesse teste temos a representação de um fluxo e2e do usuário, criando um usuário, realizando o login com o usuário criado e criando um contato em sua agenda. Para isso utilizei a combinação de 2 diferentes thresholds. Assim 95% dos usuários tem um tempo de resposta inferior a 2 segundos, era aceitável que 5% dos usuários tivessem seu tempo de resposta entre 2 e 3 segundos, e apenas 1% dos usuários pudessem ter seu tempo de resposta superior a 3 segundos. 
+Este teste representa um fluxo completo do usuário: registro → login → criação de contato. A combinação de múltiplos thresholds permite validações granulares: 95% das operações devem completar em até 2s, 99% em até 3s, e no máximo 1% pode exceeder 3s. 
 
 ### contact.test.js
-```js 
 
-// define configuration
+```js
+// Configuração do teste e2e
 export const options = {
   // define thresholds
   thresholds: {
-    http_req_failed: ["rate<0.01"], // http errors should be less than 1%
-    http_req_duration: ["p(99)<3000"], // 99% of requests should be below 3s
-    http_req_duration: ["p(95)<2000"], // 99% of requests should be below 2s
+    http_req_failed: ["rate<0.01"], // Taxa de erro < 1%
+    http_req_duration: ["p(95)<2000"], // 95% das requisições < 2s
+    http_req_duration: ["p(99)<3000"], // 99% das requisições < 3s
   },
-
 };
 ```
 
 ## Checks
-Eu utilizei 2 tipos de checks no projeto, checks para verificar o status da resposta como ``` loginUserResponse.status === 200 ``` e verificação do conteúdo da resposta e seu respectivo tipo ```typeof loginUserResponse.json().token == "string",```.
+
+Foram utilizados dois tipos de validações:
+
+1. **Verificação de status**: `loginUserResponse.status === 200`
+2. **Verificação de tipo**: `typeof loginUserResponse.json().token === "string"`
 
 
 ### contact.test.js
@@ -70,9 +92,12 @@ Eu utilizei 2 tipos de checks no projeto, checks para verificar o status da resp
 ```
 
 ## Helpers
-Eu criei 2 helpers para o projeto:
 
-```urlHelper.js``` tem o objetivo de buscar a url base em um arquivo de configuração (.env) permitindo que informações sensíveis possam ser facilmente alteradas sem necessitar de grande refatoração ou um novo build. 
+Foram criados 2 helpers para reutilização de lógica comum:
+
+### urlHelper.js
+
+Busca a URL base a partir de variáveis de ambiente, permitindo alterações sem refatoração ou novo build:
 
 ```js
 export default function getBaseUrl() {
@@ -80,7 +105,10 @@ export default function getBaseUrl() {
 }
 ```
 
-```userHelper``` tem o objetivo de encapsular alguns comportamentos do endpoint de usuários para ser reutilizado com maior facilidade pelos arquivos de teste. 
+### userHelper.js
+
+Encapsula operações do endpoint de usuários para reutilização nos testes:
+
 ```js
 createUser = (userBody) => {
     const createUserResponse = http.post(`${getBaseUrl()}/register`, userBody, {
@@ -114,51 +142,52 @@ completeFlowDuration.add(flowDuration);
 
 ## Faker
 
-### contact.test.js
-Eu importei a biblioteca do faker sugerida para o k6, e utilizei as funções de name e phone para criar um novo contato. 
+A biblioteca Faker foi utilizada para gerar dados aleatórios nos testes:
 
 ```js
 import faker from "k6/x/faker";
 
-...
-
 let contactBody = JSON.stringify({
-      name: faker.person.name(),
-      phone: faker.person.phone(),
-    });
-
+  name: faker.person.name(),
+  phone: faker.person.phone(),
+});
 ```
 
 ## Variável de Ambiente
 Foi criado um arquivo .env para salvar as informações sensíveis e url`s importantes. Quando a aplicação estiver publicada em um ambiente de nuvem, podemos apenas alterar a BASE_URL nesse arquivo e com isso executar os testes apontando para o novo ambiente sem necessitar de nenhuma alteração de código. Importante, lembrar que essas variáveis de ambiente também estão adicionadas no github para executar a pipeline de testes.  
 
-```.env
+```env
 BASE_URL=http://localhost:3000
 K6_CLOUD_TOKEN=cloudTokenAqui
 K6_CLOUD_PROJECT_ID=ProjectIdAqui
 ```
 
+Quando a aplicação for implantada em ambiente de nuvem, basta alterar `BASE_URL` para apontar para o novo servidor. Essas variáveis também são configuradas no GitHub Actions para a execução da pipeline de testes.
+
 
 ## Stages
-No projeto utilizei Stages no arquivo abaixo. 
 
-### contact.test.js
-```js 
-  stages: [
-    { duration: "3s", target: 10 }, // Ramp up
-    { duration: "15s", target: 10 }, // Average
-    { duration: "2s", target: 100 }, // Spike
-    { duration: "3s", target: 100 }, // Spike
-    { duration: "5s", target: 10 }, // Average
-    { duration: "5s", target: 0 }, // Ramp down
-  ],
+Os stages simulam diferentes padrões de carga em fases:
+
+```js
+stages: [
+  { duration: "3s", target: 10 },   // Ramp up: subida gradual
+  { duration: "15s", target: 10 },  // Estável: uso normal
+  { duration: "2s", target: 100 },  // Pico 1: aumento rápido
+  { duration: "3s", target: 100 },  // Pico 2: mantém o pico
+  { duration: "5s", target: 10 },   // Redução: volta ao normal
+  { duration: "5s", target: 0 },    // Ramp down: encerramento
+],
 ```
-Dessa forma pude representar um ramp up de 3 segundos com 10 usuários virtuais, uma média de uso de 15 segundos ainda com 10 usuários, um pico de 100 usuários durante 2 segundos e depois mais um pico de 100 usuários durante 3 segundos. Após isso, voltamos a utilização média de 10 usuários e finalizamos o teste com 0. 
+
+Este padrão simula um cenário realista: crescimento de usuários, período estável, picos de uso, redução e finalização. 
 
 ## Uso de Token de Autenticação e Reaproveitamento de Resposta
 
-No primeiro grupo eu realizo o login com o usuário criado, extraio o token da resposta com o método ```loginUserResponse.json("token");``` e salvo em uma variável ```userToken```, representando o reaproveitamento de resposta. 
-No segundo grupo Create contact eu utilizo o token extraído para criar um contato ```Authorization: `Bearer ${userToken}` ```.
+O token obtido na resposta de login é extraído e reutilizado em requisições subsequentes:
+
+1. **Extração do token**: `userToken = loginUserResponse.json("token");`
+2. **Reutilização**: `Authorization: Bearer ${userToken}`
 
 ### contact.test.js
 ```js
@@ -169,8 +198,6 @@ group(`Login with user`, () => {
   });
 
   group(`Create contact`, () => {
-    ...
-
     const createContactResponse = http.post(
       `${getBaseUrl()}/contacts`,
       contactBody,
@@ -181,31 +208,36 @@ group(`Login with user`, () => {
         },
       },
     );
+  });
 ```
 
 ## Data-Driven Testing
 
-Foi criado um arquivo json contendo um contato default para que pudesse ser adicionado em todos os novos usuários cadastrados. Eu realizei a importação para uma variável e utilizei ela como o body do request.
+Um arquivo JSON fixture contém dados padrão reutilizados em múltiplos testes:
 
-### contact.test.js
-```js 
-const baseFile = JSON.parse(open("./fixture/emergenciaPolicial.json"))
-
-const createDefaultContactResponse = createContact(userToken, defaultContact)
+```js
+const defaultContact = JSON.parse(open("./fixture/emergenciaPolicial.json"));
+const response = createContact(userToken, defaultContact);
 ```
+
+Esta abordagem garante consistência nos testes e facilita a manutenção de dados de teste.
 
 ## Groups
 
-Utilizei os groups para organizar os testes e os resultados já que busquei no contact.test.js representar um fluxo completo do usuário.
+Os groups organizam as operações em fases lógicas, facilitando a leitura dos resultados e manutenção do código:
 
-### contact.test.js
-```js 
-group(`Register user`, () => { 
+```js
+group("Registrar usuário", () => {
+  // Operações de registro
 });
 
-group(`Login with user`, () => {
+group("Login do usuário", () => {
+  // Operações de autenticação
 });
 
-group(`Create contact`, () => {
+group("Criar contato", () => {
+  // Operações de criação
 });
 ```
+
+Cada grupo gera métricas separadas no relatório, permitindo análise granular de performance.
