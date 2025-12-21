@@ -92,6 +92,8 @@ jobs:
         name: Run k6 test
         env:
           BASE_URL: ${{ secrets.BASE_URL}}
+          K6_WEB_DASHBOARD: true
+          K6_WEB_DASHBOARD_EXPORT: html-report.html
         with:
           path: ./tests/k6/*.test.js
           cloud-run-locally: false
