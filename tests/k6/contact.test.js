@@ -5,6 +5,7 @@ import faker from "k6/x/faker";
 import { randomString } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
 import getBaseUrl from "./helpers/urlHelper.js";
 import UserHelper from "./helpers/userHelper.js";
+import { Trend } from "k6/metrics";
 
 // define configuration
 export const options = {
@@ -25,12 +26,17 @@ export const options = {
   ],
 };
 
+let completeFlowDuration = new Trend("completeFlowDuration");
+
 export default function () {
   let userBody = JSON.stringify({
     name: `test ${randomString(8)}`,
     password: `1234`,
   });
   let userToken;
+
+  // Capture the duration of the entire flow on completeFlowDuration Trend
+  const start = Date.now();
 
   group(`Register user`, () => {
     const createUserResponse = new UserHelper().createUser(userBody);
@@ -68,10 +74,14 @@ export default function () {
       },
     );
 
+    const flowDuration = Date.now() - start;
+    completeFlowDuration.add(flowDuration);
+
     check(createContactResponse, {
       "Verify contact created with status 201": (createContactResponse) =>
         createContactResponse.status === 201,
     });
+
     sleep(1);
   });
 }

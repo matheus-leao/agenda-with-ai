@@ -12,7 +12,7 @@ export const options = {
   },
 
   vus: 10,
-  duration: "10s"
+  duration: "10s",
 };
 
 export default function () {
@@ -22,8 +22,8 @@ export default function () {
       password: `1234`,
     });
 
-    const createUserResponse = new UserHelper().createUser(userBody)
-    
+    const createUserResponse = new UserHelper().createUser(userBody);
+
     check(createUserResponse, {
       "status is 201": (resp) => resp.status === 201,
     });
